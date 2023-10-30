@@ -8,15 +8,11 @@ public class View : MonoBehaviour
     public Transform player1;
     public float xRotation = 0f;
     public float yRotation = 0f;
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Cursor.lockState = CursorLockMode.Locked;
-    }
 
     // Update is called once per frame
     void Update()
     {
+
         float mouseX = Input.GetAxis("Mouse X") * sentitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * sentitivity * Time.deltaTime;
 
