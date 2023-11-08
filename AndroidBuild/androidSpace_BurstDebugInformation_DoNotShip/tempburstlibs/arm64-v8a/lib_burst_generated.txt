@@ -20,6 +20,7 @@ Library: C:\Users\Hurtado\Documents\Antro\Multimedia\colab-space\Temp\BurstOutpu
 --assembly-defines=System.Runtime.Serialization;
 --assembly-defines=System.Xml;
 --assembly-defines=System.Xml.Linq;
+--assembly-defines=unity-websocket-sharp;
 --assembly-defines=Unity.Burst;
 --assembly-defines=Unity.Burst.Unsafe;
 --assembly-defines=Unity.Collections;
@@ -47,6 +48,7 @@ Library: C:\Users\Hurtado\Documents\Antro\Multimedia\colab-space\Temp\BurstOutpu
 --assembly-defines=Unity.Services.Core.Threading;
 --assembly-defines=Unity.Services.QoS;
 --assembly-defines=Unity.Services.Relay;
+--assembly-defines=Unity.Services.Wire.Internal;
 --assembly-defines=Unity.TextMeshPro;
 --assembly-defines=Unity.XR.Management;
 --assembly-defines=UnityEngine;
