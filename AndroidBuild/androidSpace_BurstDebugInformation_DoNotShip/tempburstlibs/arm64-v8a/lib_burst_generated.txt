@@ -46,6 +46,7 @@ Library: C:\Users\Hurtado\Documents\Antro\Multimedia\colab-space\Temp\BurstOutpu
 --assembly-defines=Unity.Services.Core.Scheduler;
 --assembly-defines=Unity.Services.Core.Telemetry;
 --assembly-defines=Unity.Services.Core.Threading;
+--assembly-defines=Unity.Services.Lobbies;
 --assembly-defines=Unity.Services.QoS;
 --assembly-defines=Unity.Services.Relay;
 --assembly-defines=Unity.Services.Wire.Internal;
