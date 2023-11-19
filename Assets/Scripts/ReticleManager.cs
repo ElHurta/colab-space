@@ -21,12 +21,12 @@ public class ReticleManager : MonoBehaviour
 		Timer_Exit ();
 	}
 
-	void Update ()
+	void Update()
 	{
-		Timer ();
+		Timer();
 	}
 
-	private void Timer ()
+	private void Timer()
 	{
 		if (isEnable)
 		{
@@ -40,12 +40,12 @@ public class ReticleManager : MonoBehaviour
 		}
 	}
 
-	public void Timer_Enter ()
+	public void Timer_Enter()
 	{
 		isEnable = true;
 	}
 
-	public void Timer_Exit ()
+	public void Timer_Exit()
 	{
 		isEnable = false;
 		imgTimer.fillAmount = 0;

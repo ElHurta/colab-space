@@ -34,6 +34,7 @@ Library: C:\Users\Hurtado\Documents\Antro\Multimedia\colab-space\Temp\BurstOutpu
 --assembly-defines=Unity.Multiplayer.Tools.NetStats;
 --assembly-defines=Unity.Multiplayer.Tools.NetStatsReporting;
 --assembly-defines=Unity.Multiplayer.Tools.NetworkSolutionInterface;
+--assembly-defines=Unity.Netcode.Components;
 --assembly-defines=Unity.Netcode.Runtime;
 --assembly-defines=Unity.Networking.Transport;
 --assembly-defines=Unity.Services.Authentication;

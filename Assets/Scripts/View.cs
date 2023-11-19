@@ -12,14 +12,16 @@ public class View : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (gameObject != null)
+        {    
+            float mouseX = Input.GetAxis("Mouse X") * sentitivity * Time.deltaTime;
+            float mouseY = Input.GetAxis("Mouse Y") * sentitivity * Time.deltaTime;
 
-        float mouseX = Input.GetAxis("Mouse X") * sentitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * sentitivity * Time.deltaTime;
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 75f);
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 75f);
-
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        player1.Rotate(Vector3.up * mouseX);
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            player1.Rotate(Vector3.up * mouseX);
+        }
     }
 }

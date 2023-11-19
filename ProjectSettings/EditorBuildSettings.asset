@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Cardboard/Google Cardboard XR Plugin for Unity/1.22.0/Hello Cardboard/Scenes/HelloCardboard.unity
     guid: b898190303ac322429f3a6aa03e9fd71
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/DojoScene.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects:

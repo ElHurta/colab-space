@@ -7,6 +7,12 @@ using Unity.Services.Lobbies.Models;
 using Unity.Netcode;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
+using System.Threading.Tasks;
+using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 
 public class SpaceGameLobby : MonoBehaviour
 {
@@ -46,12 +52,13 @@ public class SpaceGameLobby : MonoBehaviour
     }
 
     private void HandlePeriodicListLobbies(){
-        if(joinedLobby == null && AuthenticationService.Instance.IsSignedIn) return;
-        listLobbiesTimer -= Time.deltaTime;
+        if(joinedLobby == null && AuthenticationService.Instance.IsSignedIn && SceneManager.GetActiveScene().name == Loader.Scene.MainMenu.ToString()){
+            listLobbiesTimer -= Time.deltaTime;
 
-        if (listLobbiesTimer <= 0){
-            listLobbiesTimer = 3f;
-            ListLobbies();
+            if (listLobbiesTimer <= 0){
+                listLobbiesTimer = 3f;
+                ListLobbies();
+            }
         }
     }
 
@@ -90,13 +97,50 @@ public class SpaceGameLobby : MonoBehaviour
         }
     }
 
+    private async Task<Allocation> AllocateRelay(){
+        try {
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(4);
+            return allocation;
+        } catch (RelayServiceException e){
+            Debug.LogError($"Failed to allocate relay: {e.Message}");
+
+            return default;
+        }
+    }
+
+    private async Task<string> GetRelayJoinCode(Allocation allocation){
+        try {
+            string relayJoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+            Debug.Log($"Relay Join Code: {relayJoinCode}");
+            return relayJoinCode;
+        } catch (RelayServiceException e){
+            Debug.LogError($"Failed to get relay join code: {e.Message}");
+            return default;
+        }
+    }
+
+    private async Task<JoinAllocation> JoinRelay(string relayJoinCode){
+        try {
+            return await RelayService.Instance.JoinAllocationAsync(relayJoinCode);
+        } catch (RelayServiceException e){
+            Debug.LogError($"Failed to join relay: {e.Message}");
+            return default;
+        }
+    }
+
     public async void CreateLobby(string lobbyName, bool isPrivate){
         try {
             joinedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, 4, new CreateLobbyOptions{
                 IsPrivate = isPrivate,
             });
 
+            Allocation allocation = await AllocateRelay();
+            string relayJoinCode = await GetRelayJoinCode(allocation);
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
+                new RelayServerData(allocation, "dtls")
+            );
             NetworkManager.Singleton.StartHost();
+            Loader.LoadNetwork(Loader.Scene.DojoScene);
             Debug.Log("Create Game " + joinedLobby.LobbyCode.ToString());
         } catch (LobbyServiceException e){
             Debug.LogError($"Failed to create lobby: {e.Message}");
@@ -107,7 +151,17 @@ public class SpaceGameLobby : MonoBehaviour
         try  {
             joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
             NetworkManager.Singleton.StartClient();
-            Debug.Log("Join Game" + joinedLobby.LobbyCode.ToString());
+            Debug.Log("Join Game " + joinedLobby.LobbyCode.ToString());
+        } catch (LobbyServiceException e){
+            Debug.LogError($"Failed to join lobby: {e.Message}");
+        }
+    }
+
+    public async void JoinWithId(string lobbyId){
+        try {
+            joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+            NetworkManager.Singleton.StartClient();
+            Debug.Log("Join Game " + joinedLobby.LobbyCode.ToString());
         } catch (LobbyServiceException e){
             Debug.LogError($"Failed to join lobby: {e.Message}");
         }
