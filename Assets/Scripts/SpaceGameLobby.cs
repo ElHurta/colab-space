@@ -16,6 +16,7 @@ using Unity.Networking.Transport.Relay;
 
 public class SpaceGameLobby : MonoBehaviour
 {
+    private const string KEY_RELAY_JOIN_CODE = "relayJoinCode";
     public static SpaceGameLobby Instance { get; private set;}
     private Lobby joinedLobby;
     private float heartbeatTimer;
@@ -135,10 +136,18 @@ public class SpaceGameLobby : MonoBehaviour
             });
 
             Allocation allocation = await AllocateRelay();
+
             string relayJoinCode = await GetRelayJoinCode(allocation);
+
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 new RelayServerData(allocation, "dtls")
             );
+
+            await LobbyService.Instance.UpdateLobbyAsync(joinedLobby.Id, new UpdateLobbyOptions{
+                Data = new Dictionary<string, DataObject>{
+                    {KEY_RELAY_JOIN_CODE, new DataObject(DataObject.VisibilityOptions.Member ,relayJoinCode) }
+                }
+            });
             NetworkManager.Singleton.StartHost();
             Loader.LoadNetwork(Loader.Scene.DojoScene);
             Debug.Log("Create Game " + joinedLobby.LobbyCode.ToString());
@@ -150,6 +159,15 @@ public class SpaceGameLobby : MonoBehaviour
     public async void QuickJoin(){
         try  {
             joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
+
+            string relayJoinCode = joinedLobby.Data[KEY_RELAY_JOIN_CODE].Value;
+            JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
+                new RelayServerData(joinAllocation, "dtls")
+            );
+
+
             NetworkManager.Singleton.StartClient();
             Debug.Log("Join Game " + joinedLobby.LobbyCode.ToString());
         } catch (LobbyServiceException e){
@@ -160,6 +178,15 @@ public class SpaceGameLobby : MonoBehaviour
     public async void JoinWithId(string lobbyId){
         try {
             joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+
+            string relayJoinCode = joinedLobby.Data[KEY_RELAY_JOIN_CODE].Value;
+            
+            JoinAllocation joinAllocation = await JoinRelay(relayJoinCode);
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
+                new RelayServerData(joinAllocation, "dtls")
+            );
+
             NetworkManager.Singleton.StartClient();
             Debug.Log("Join Game " + joinedLobby.LobbyCode.ToString());
         } catch (LobbyServiceException e){
