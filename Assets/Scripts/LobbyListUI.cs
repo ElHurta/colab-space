@@ -6,10 +6,12 @@ using UnityEngine.UI;
 public class LobbyListUI : MonoBehaviour
 {
     [SerializeField] private Button closeButton;
+    [SerializeField] private TestingLobbyUI testingLobbyUI;
 
     private void Awake(){
         closeButton.onClick.AddListener(() =>{
             Hide();
+            testingLobbyUI.Show();
         });
     }
 

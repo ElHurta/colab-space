@@ -26,6 +26,7 @@ public class TestingLobbyUI : MonoBehaviour
         showLobbiesButton.onClick.AddListener(() =>{
             Debug.Log("Show Lobbies");
             lobbyListUI.Show();
+            gameObject.SetActive(false);
         });
 
         lobbyBtn.gameObject.SetActive(false);
@@ -57,5 +58,12 @@ public class TestingLobbyUI : MonoBehaviour
     private void OnDestroy(){
         SpaceGameLobby.Instance.OnLobbyListChanged -= HandleLobbyListChanged;
     }
-        
+    
+    public void Show(){
+        gameObject.SetActive(true);
+    }
+
+    public void Hide(){
+        gameObject.SetActive(false);
+    }   
 }
