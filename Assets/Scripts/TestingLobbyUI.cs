@@ -16,20 +16,31 @@ public class TestingLobbyUI : MonoBehaviour
 
     private void Awake(){
         createGameButton.onClick.AddListener(() =>{
-            SpaceGameLobby.Instance.CreateLobby(Random.Range(0, 100).ToString(), false);
-            Lobby lobby = SpaceGameLobby.Instance.GetLobby();
+            CreateLobby();
         });
+        
         quickJoinGameButton.onClick.AddListener(() =>{
             SpaceGameLobby.Instance.QuickJoin();
             Lobby lobby = SpaceGameLobby.Instance.GetLobby();
         });
         showLobbiesButton.onClick.AddListener(() =>{
-            Debug.Log("Show Lobbies");
-            lobbyListUI.Show();
-            gameObject.SetActive(false);
+            ShowLobbies();
         });
 
         lobbyBtn.gameObject.SetActive(false);
+    }
+
+    public void CreateLobby(){
+        SpaceGameLobby.Instance.CreateLobby(Random.Range(0, 100).ToString(), false);
+    }
+
+    public void QuickJoin(){
+        SpaceGameLobby.Instance.QuickJoin();
+    }
+
+    public void ShowLobbies(){
+        lobbyListUI.Show();
+        gameObject.SetActive(false);
     }
 
     private void Start(){

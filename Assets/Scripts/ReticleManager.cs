@@ -6,19 +6,26 @@ using UnityEngine.UI;
 
 public class ReticleManager : MonoBehaviour
 {
+	public static ReticleManager Instance { get; private set;}
+
     [Header ("Timer")]
 	public Image imgTimer;
 	[Range (0f, 5f)] public float timeTotal = 1;
 	
 	[Header ("Events")]
 	public UnityEvent[] timerEvents;
+	public int timerEventID;
 	
 	float timeCurrent;
 	bool isEnable;
 
+	private void Awake(){
+        Instance = this;
+    }
+
 	void Start ()
 	{
-		Timer_Exit ();
+		Timer_Exit();
 	}
 
 	void Update()
@@ -35,14 +42,17 @@ public class ReticleManager : MonoBehaviour
 
 			if (timeCurrent >= timeTotal)
 			{
-				isEnable = false;
+				timerEvents[timerEventID].Invoke();
+				Timer_Exit();
 			}
 		}
 	}
 
-	public void Timer_Enter()
+	public void Timer_Enter(int _ID)
 	{
+		Debug.Log("Timer_Enter");
 		isEnable = true;
+		timerEventID = _ID;
 	}
 
 	public void Timer_Exit()

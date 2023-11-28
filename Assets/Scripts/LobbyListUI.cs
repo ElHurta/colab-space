@@ -24,5 +24,6 @@ public class LobbyListUI : MonoBehaviour
 
     public void Hide(){
         gameObject.SetActive(false);
+        testingLobbyUI.gameObject.SetActive(true);
     }
 }
